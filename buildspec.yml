@@ -11,6 +11,7 @@ phases:
   pre_build:
     commands:
       - python --version
+      - pip show django
       - python manage.py collectstatic --noinput
       - pylint rentacar/**/*.py || true
   build:
