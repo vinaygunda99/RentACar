@@ -15,7 +15,7 @@ phases:
       - pylint RentACar/**/*.py || true
   build:
     commands:
-      - echo "Completed!!!"
+      - echo "DONE!!!!"
 artifacts:
    files:
     - '**/*'
