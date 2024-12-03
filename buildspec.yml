@@ -12,7 +12,7 @@ phases:
     commands:
       - python --version
       - python manage.py collectstatic --noinput
-      - pylint RentACar/**/*.py || true
+      - pylint rentacar/**/*.py || true
   build:
     commands:
       - echo "DONE!!!!"
