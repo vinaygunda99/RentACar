@@ -6,16 +6,24 @@ phases:
     commands:
       - pip install --upgrade pip
       - pip install -r requirements.txt pylint
-#      - yum update -y
-#      - yum install -y jq
+      - yum update -y
+      - yum install -y jq
   pre_build:
     commands:
       - python --version
       - python manage.py collectstatic --noinput
       - pylint rentacar/**/*.py || true
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
+      - unzip ./sonar-scanner-cli-3.3.0.1492-linux.zip
+      - export PATH=$PATH:./sonar-scanner-3.3.0.1492-linux/bin/
   build:
     commands:
+      - sonar-scanner -Dsonar.login=e464b893c37f12db5756e8e0fac8ef38fdd5702f -Dsonar.host.url=https://sonarcloud.io -Dsonar.projectKey=vinaygunda99_RentACar -Dsonar.organization=vinaygunda99 || true
       - sleep 5
+      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=vinaygunda99_RentACar >result.json
+      - cat result.json
+#      - if [ "$(jq -r '.projectStatus.status' result.json)" = "ERROR" ]; then export CODEBUILD_BUILD_SUCCEEDING=0; fi
+      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ] ; then $CODEBUILD_BUILD_SUCCEEDING -eq 0 ;fi
 artifacts:
    files:
     - '**/*'
